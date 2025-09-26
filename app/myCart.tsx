@@ -169,6 +169,7 @@ export default function MyCart() {
     );
   };
 
+  
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
