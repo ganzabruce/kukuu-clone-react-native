@@ -7,6 +7,7 @@ export const endpoints = {
   cart: `${BASE_URL}/api/routes/cart`,
   login: `${BASE_URL}/api/auth/login`,
   signup: `${BASE_URL}/api/auth/signup`,
+  placeOrder:`${BASE_URL}/api/routes/orders`
 };
 
 

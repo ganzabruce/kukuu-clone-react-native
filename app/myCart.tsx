@@ -169,14 +169,39 @@ export default function MyCart() {
     );
   };
 
-  
+  const placeOrder = async(showRefreshIndicator = false) =>{
+    if (!isLoggedIn) return;
+    if (showRefreshIndicator) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    setError(null);
+    try {
+      const res = await fetch(endpoints.placeOrder, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || 'Failed to fetch cart');
+        Alert.alert('Order', 'Successfully placed Order!')
+    } catch (e) {
+      setError('Failed to load cart');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>My Cart</Text>
         <View style={styles.headerActions}>
           <Pressable style={styles.refreshBtn} onPress={() => loadCart(true)}>
-            <Text style={styles.refreshBtnText}>🔄</Text>
+            <Text style={styles.refreshBtnText}>Refresh</Text>
           </Pressable>
           {items.length > 0 && (
             <Pressable style={styles.clearBtn} onPress={clearAllItems}>
@@ -269,7 +294,7 @@ export default function MyCart() {
               <Text style={styles.totalVal}>{Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total)}</Text>
             </View>
             {items.length > 0 && (
-              <Pressable style={styles.checkoutBtn} onPress={() => Alert.alert('Checkout', 'Checkout functionality coming soon!')}>
+              <Pressable style={styles.checkoutBtn} onPress={placeOrder}>
                 <Text style={styles.checkoutBtnText}>Place Order...</Text>
               </Pressable>
             )}
